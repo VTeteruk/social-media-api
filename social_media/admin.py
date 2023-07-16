@@ -1,3 +1,5 @@
 from django.contrib import admin
+from social_media.models import Post, Follows
 
-# Register your models here.
+admin.site.register(Post)
+admin.site.register(Follows)
