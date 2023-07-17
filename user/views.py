@@ -1,5 +1,6 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -78,3 +79,31 @@ class UserLogoutView(APIView):
         logout(request)
 
         return Response({"detail": "User logged out successfully"})
+
+
+@api_view(["GET"])
+def follow_user(request, pk):
+    try:
+        user_to_follow = get_user_model().objects.get(pk=pk)
+        user = request.user
+
+        if user == user_to_follow:
+            return Response(
+                {"error": "You cannot follow yourself."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if user in user_to_follow.followed_by.all():
+            user_to_follow.followed_by.remove(user)
+            message = "User unfollowed successfully."
+        else:
+            user_to_follow.followed_by.add(user)
+            message = "User followed successfully."
+
+        return Response({"message": message}, status=status.HTTP_200_OK)
+
+    except get_user_model().DoesNotExist:
+        return Response(
+            {"error": "User with the specified ID does not exist."},
+            status=status.HTTP_404_NOT_FOUND,
+        )

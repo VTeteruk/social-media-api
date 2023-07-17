@@ -71,5 +71,19 @@ class UserListSerializer(UserSerializer):
 
 
 class UserDetailSerializer(UserSerializer):
+    count_followers = serializers.SerializerMethodField()
+    count_following = serializers.SerializerMethodField()
+
     class Meta(UserSerializer.Meta):
-        fields = UserSerializer.Meta.fields + ("bio", "image")
+        fields = UserSerializer.Meta.fields + (
+            "bio",
+            "image",
+            "count_followers",
+            "count_following",
+        )
+
+    def get_count_followers(self, obj):
+        return obj.count_followers()
+
+    def get_count_following(self, obj):
+        return obj.count_following()

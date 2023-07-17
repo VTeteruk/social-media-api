@@ -6,6 +6,7 @@ from user.views import (
     CreateTokenView,
     UserLogoutView,
     UserCreateView,
+    follow_user,
 )
 
 router = DefaultRouter()
@@ -18,4 +19,5 @@ urlpatterns = [
     path("login/", CreateTokenView.as_view(), name="token"),
     path("logout/", UserLogoutView.as_view(), name="logout"),
     path("", include(router.urls)),
+    path("users/<int:pk>/follow", follow_user, name="follow-user"),
 ]

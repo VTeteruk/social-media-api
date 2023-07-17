@@ -64,9 +64,6 @@ class User(AbstractUser):
     def count_following(self):
         return get_user_model().objects.filter(follows=self).count()
 
-    def __str__(self):
-        return self.username
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
