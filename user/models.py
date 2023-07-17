@@ -58,10 +58,10 @@ class User(AbstractUser):
         "self", related_name="followed_by", symmetrical=False, blank=True
     )
 
-    def count_followers(self):
+    def count_following(self):
         return self.follows.count()
 
-    def count_following(self):
+    def count_followers(self):
         return get_user_model().objects.filter(follows=self).count()
 
     USERNAME_FIELD = "email"

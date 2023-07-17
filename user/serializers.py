@@ -87,3 +87,27 @@ class UserDetailSerializer(UserSerializer):
 
     def get_count_following(self, obj):
         return obj.count_following()
+
+
+class FollowersSerializer(serializers.ModelSerializer):
+    followed_by = serializers.SerializerMethodField()
+
+    class Meta:
+        model = get_user_model()
+        fields = ("followed_by",)
+
+    def get_followed_by(self, obj):
+        followed_by_users = obj.followed_by.all()
+        return [user.email for user in followed_by_users]
+
+
+class FollowingSerializer(serializers.ModelSerializer):
+    following = serializers.SerializerMethodField()
+
+    class Meta:
+        model = get_user_model()
+        fields = ("following",)
+
+    def get_following(self, obj):
+        following_by_users = obj.follows.all()
+        return [user.email for user in following_by_users]

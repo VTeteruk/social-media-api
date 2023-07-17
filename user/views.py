@@ -13,6 +13,7 @@ from user.serializers import (
     UserSerializer,
     AuthTokenSerializer,
     UserDetailSerializer,
+    FollowersSerializer, FollowingSerializer,
 )
 
 
@@ -107,3 +108,25 @@ def follow_user(request, pk):
             {"error": "User with the specified ID does not exist."},
             status=status.HTTP_404_NOT_FOUND,
         )
+
+
+@api_view(["GET"])
+def followers(request, pk):
+    user = get_user_model().objects.get(pk=pk)
+    serializer = FollowersSerializer(user)
+
+    return Response(
+        serializer.data,
+        status=status.HTTP_200_OK,
+    )
+
+
+@api_view(["GET"])
+def following(request, pk):
+    user = get_user_model().objects.get(pk=pk)
+    serializer = FollowingSerializer(user)
+
+    return Response(
+        serializer.data,
+        status=status.HTTP_200_OK,
+    )
