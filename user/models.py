@@ -1,6 +1,7 @@
 import os
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -51,6 +52,17 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     bio = models.TextField(blank=True, null=True)
     image = models.ImageField(null=True, upload_to=create_unique_pass)
+    follows = models.ManyToManyField("self", related_name="followed_by",
+                                     symmetrical=False, blank=True)
+
+    def count_followers(self):
+        return self.follows.count()
+
+    def count_following(self):
+        return get_user_model().objects.filter(follows=self).count()
+
+    def __str__(self):
+        return self.username
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
