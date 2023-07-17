@@ -14,7 +14,9 @@ class Migration(migrations.Migration):
             model_name="user",
             name="follows",
             field=models.ManyToManyField(
-                blank=True, related_name="followed_by", to=settings.AUTH_USER_MODEL
+                blank=True,
+                related_name="followed_by",
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
     ]

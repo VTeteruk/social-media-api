@@ -8,8 +8,11 @@ from rest_framework.views import APIView
 from django.contrib.auth import logout, get_user_model
 from rest_framework.viewsets import ModelViewSet
 
-from user.serializers import UserSerializer, AuthTokenSerializer, \
-    UserDetailSerializer
+from user.serializers import (
+    UserSerializer,
+    AuthTokenSerializer,
+    UserDetailSerializer,
+)
 
 
 class UserCreateView(generics.CreateAPIView):
@@ -25,13 +28,15 @@ class UserViewSet(ModelViewSet):
         user = self.get_object()
         if user != self.request.user or self.request.user.is_staff:
             raise PermissionDenied(
-                "You do not have permission to update this user.")
+                "You do not have permission to update this user."
+            )
         serializer.save()
 
     def perform_destroy(self, instance):
         if instance != self.request.user or self.request.user.is_staff:
             raise PermissionDenied(
-                "You do not have permission to delete this user.")
+                "You do not have permission to delete this user."
+            )
         instance.delete()
 
     def get_queryset(self):
@@ -66,11 +71,10 @@ class CreateTokenView(ObtainAuthToken):
 
 
 class UserLogoutView(APIView):
-
     def get(self, request, *args, **kwargs) -> Response:
         # Delete the authentication token associated with the user
         request.user.auth_token.delete()
 
         logout(request)
 
-        return Response({'detail': 'User logged out successfully'})
+        return Response({"detail": "User logged out successfully"})
