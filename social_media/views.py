@@ -1,8 +1,6 @@
 from django.db.models import Q
-from rest_framework import status, generics
+from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from social_media.models import Post
 from social_media.serializers import PostSerializer
