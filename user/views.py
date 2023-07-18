@@ -36,7 +36,7 @@ class UserViewSet(ModelViewSet):
         serializer.save()
 
     def perform_destroy(self, instance):
-        if instance != self.request.user or self.request.user.is_staff:
+        if instance != self.request.user and not self.request.user.is_staff:
             raise PermissionDenied(
                 "You do not have permission to delete this user."
             )
