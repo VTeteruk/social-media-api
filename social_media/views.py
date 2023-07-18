@@ -1,4 +1,5 @@
 from django.db.models import Q
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 
@@ -22,6 +23,18 @@ class PostListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description='Filter by post\'s name',
+                type=str
+            )
+        ]
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):

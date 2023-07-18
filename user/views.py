@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics, status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view
@@ -19,6 +20,7 @@ from user.serializers import (
 
 
 class UserCreateView(generics.CreateAPIView):
+    """Register a new user"""
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
 
@@ -67,13 +69,37 @@ class UserViewSet(ModelViewSet):
             return UserDetailSerializer
         return UserSerializer
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="email",
+                description='Filter by user\'s email',
+                type=str
+            ),
+            OpenApiParameter(
+                name="first_name",
+                description='Filter by user\'s first name',
+                type=str
+            ),
+            OpenApiParameter(
+                name="last_name",
+                description='Filter by user\'s last_name',
+                type=str
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class CreateTokenView(ObtainAuthToken):
+    """Create a token for registered user"""
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     serializer_class = AuthTokenSerializer
 
 
 class UserLogoutView(APIView):
+    """Logout a user"""
     def get(self, request, *args, **kwargs) -> Response:
         # Delete the authentication token associated with the user
         request.user.auth_token.delete()
@@ -85,6 +111,7 @@ class UserLogoutView(APIView):
 
 @api_view(["GET"])
 def follow_user(request, pk):
+    """Follow / Unfollow a chosen user"""
     try:
         user_to_follow = get_user_model().objects.get(pk=pk)
         user = request.user
@@ -113,6 +140,7 @@ def follow_user(request, pk):
 
 @api_view(["GET"])
 def followers(request, pk):
+    """Show all followers"""
     user = get_user_model().objects.get(pk=pk)
     serializer = FollowersSerializer(user)
 
@@ -124,6 +152,7 @@ def followers(request, pk):
 
 @api_view(["GET"])
 def following(request, pk):
+    """Show all following"""
     user = get_user_model().objects.get(pk=pk)
     serializer = FollowingSerializer(user)
 
