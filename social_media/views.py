@@ -13,6 +13,9 @@ class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
+        name = self.request.query_params.get("name")
+        if name:
+            self.queryset = Post.objects.filter(name__icontains=name)
         # Filter posts from both the current user and the users they follow
         user = self.request.user
         return Post.objects.filter(
