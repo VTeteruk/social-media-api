@@ -13,7 +13,8 @@ from user.serializers import (
     UserSerializer,
     AuthTokenSerializer,
     UserDetailSerializer,
-    FollowersSerializer, FollowingSerializer,
+    FollowersSerializer,
+    FollowingSerializer,
 )
 
 
@@ -28,7 +29,7 @@ class UserViewSet(ModelViewSet):
 
     def perform_update(self, serializer):
         user = self.get_object()
-        if user != self.request.user or self.request.user.is_staff:
+        if user != self.request.user and not self.request.user.is_staff:
             raise PermissionDenied(
                 "You do not have permission to update this user."
             )
