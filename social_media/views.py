@@ -1,3 +1,43 @@
-from django.shortcuts import render
+from django.db.models import Q
+from rest_framework import status, generics
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-# Create your views here.
+from social_media.models import Post
+from social_media.serializers import PostSerializer
+
+
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        # Filter posts from both the current user and the users they follow
+        user = self.request.user
+        return Post.objects.filter(
+            Q(creator=user) | Q(creator_id__in=user.follows.all())
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
+
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def perform_update(self, serializer):
+        user = self.get_object()
+        if user != self.request.user and not self.request.user.is_staff:
+            raise PermissionDenied(
+                "You do not have permission to update this post."
+            )
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if instance != self.request.user and not self.request.user.is_staff:
+            raise PermissionDenied(
+                "You do not have permission to delete this post."
+            )
+        instance.delete()
