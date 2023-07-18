@@ -4,12 +4,14 @@ from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 
 from social_media.models import Post
+from social_media.pagination import PostsPagination
 from social_media.serializers import PostSerializer
 
 
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    pagination_class = PostsPagination
 
     def get_queryset(self):
         name = self.request.query_params.get("name")

@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import logout, get_user_model
 from rest_framework.viewsets import ModelViewSet
 
+from user.pagination import UsersPagination
 from user.serializers import (
     UserSerializer,
     AuthTokenSerializer,
@@ -29,6 +30,7 @@ class UserCreateView(generics.CreateAPIView):
 class UserViewSet(ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
+    pagination_class = UsersPagination
 
     def perform_update(self, serializer):
         user = self.get_object()
