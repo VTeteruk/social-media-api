@@ -21,6 +21,7 @@ from user.serializers import (
 
 class UserCreateView(generics.CreateAPIView):
     """Register a new user"""
+
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
 
@@ -72,20 +73,18 @@ class UserViewSet(ModelViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="email",
-                description='Filter by user\'s email',
-                type=str
+                name="email", description="Filter by user's email", type=str
             ),
             OpenApiParameter(
                 name="first_name",
-                description='Filter by user\'s first name',
-                type=str
+                description="Filter by user's first name",
+                type=str,
             ),
             OpenApiParameter(
                 name="last_name",
-                description='Filter by user\'s last_name',
-                type=str
-            )
+                description="Filter by user's last_name",
+                type=str,
+            ),
         ]
     )
     def list(self, request, *args, **kwargs):
@@ -94,12 +93,14 @@ class UserViewSet(ModelViewSet):
 
 class CreateTokenView(ObtainAuthToken):
     """Create a token for registered user"""
+
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     serializer_class = AuthTokenSerializer
 
 
 class UserLogoutView(APIView):
     """Logout a user"""
+
     def get(self, request, *args, **kwargs) -> Response:
         # Delete the authentication token associated with the user
         request.user.auth_token.delete()

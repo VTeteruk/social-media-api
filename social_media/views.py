@@ -27,9 +27,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="name",
-                description='Filter by post\'s name',
-                type=str
+                name="name", description="Filter by post's name", type=str
             )
         ]
     )

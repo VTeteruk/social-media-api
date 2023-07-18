@@ -29,7 +29,9 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        default="New post", max_length=100, verbose_name="Product Name"
+                        default="New post",
+                        max_length=100,
+                        verbose_name="Product Name",
                     ),
                 ),
                 (
@@ -41,7 +43,8 @@ class Migration(migrations.Migration):
                 (
                     "image",
                     models.ImageField(
-                        null=True, upload_to=social_media.models.get_unique_pass
+                        null=True,
+                        upload_to=social_media.models.get_unique_pass,
                     ),
                 ),
                 ("created_date", models.DateTimeField(auto_now_add=True)),
