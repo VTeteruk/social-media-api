@@ -8,7 +8,7 @@ from django.db import models
 def get_unique_pass(instance, filename):
     _, ext = os.path.splitext(filename)
 
-    filename = f"{instance.creator.email}" f"-{uuid.uuid4()}" f"{ext}"
+    filename = f"{instance.creator.email}-{uuid.uuid4()}{ext}"
 
     return os.path.join("uploads", "posts", filename)
 
